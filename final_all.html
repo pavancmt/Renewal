@@ -1,0 +1,384 @@
+<style>
+    :root {
+        --primary: #3498db;
+        --secondary: #2ecc71;
+        --background: #f0f4f8;
+        --card-bg: #ffffff;
+        --text: #2c3e50;
+        --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        --vivid-orange: #FF5E0E;
+        --highlight-green: #28a745; /* Green for price tags */
+    }
+
+    [data-theme="dark"] {
+        --primary: #1abc9c;
+        --secondary: #e74c3c;
+        --background: #2c3e50;
+        --card-bg: #34495e;
+        --text: #ecf0f1;
+        --shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--background);
+        color: var(--text);
+        margin: 0;
+        padding: 15px;
+        transition: background 0.3s, color 0.3s;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .title-section {
+        background: var(--vivid-orange);
+        width: 100%;
+        padding: 12px 0;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: clamp(1.8rem, 6vw, 2.4rem);
+        color: #fff;
+        margin: 0;
+    }
+
+    h2, h3, h4, p {
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    .container {
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        animation: smoothFadeIn 1.2s ease;
+        box-sizing: border-box;
+    }
+
+    .theme-toggle {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: transform 0.3s;
+        z-index: 1000;
+    }
+
+    .theme-toggle:hover {
+        transform: rotate(360deg);
+    }
+
+    .input-section, .package-section, .bill-section {
+        margin: 20px 0;
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .input-section.visible, .package-section.visible, .bill-section.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 250px;
+        border: 2px solid var(--primary);
+        border-radius: 8px;
+        background: var(--card-bg);
+        color: var(--text);
+        transition: border-color 0.3s;
+        text-align: center;
+        margin: 8px auto;
+        display: block;
+        box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--secondary);
+        outline: none;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+        margin: 8px auto;
+        display: inline-block;
+        min-width: 120px;
+        touch-action: manipulation;
+    }
+
+    button:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    .package-button {
+        background: var(--vivid-orange);
+        border: none;
+        padding: 12px;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 280px;
+        display: block;
+        margin: 10px auto;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s, box-shadow 0.3s;
+        color: #fff;
+        border-radius: 8px;
+        text-align: center;
+        touch-action: manipulation;
+    }
+
+    .package-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        animation: pulse 0.5s infinite;
+    }
+
+    .package-button:active {
+        animation: bubble 0.4s ease;
+    }
+
+    :root .package-button, [data-theme="dark"] .package-button {
+        color: #fff;
+    }
+
+    .price-highlight {
+        font-weight: bold;
+        color: var(--highlight-green);
+        background: rgba(40, 167, 69, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 1.2em; /* Slightly larger font size for price tags */
+    }
+
+    .total-highlight {
+        font-weight: bold;
+        color: var(--vivid-orange);
+        background: rgba(255, 94, 14, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    @keyframes smoothFadeIn {
+        from { opacity: 0; transform: translateY(30px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes bubble {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes smoothZoomIn {
+        from { transform: scale(0) rotate(0deg); }
+        to { transform: scale(1) rotate(360deg); }
+    }
+
+    @keyframes smoothPopIn {
+        0% { transform: translate(-50%, -50%) scale(0); }
+        70% { transform: translate(-50%, -50%) scale(1.05); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .bill-section {
+        display: none;
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+    }
+
+    #qrCode {
+        margin-top: 15px;
+        animation: smoothZoomIn 0.8s ease;
+        display: flex;
+        justify-content: center;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        animation: smoothPopIn 0.6s ease;
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+        box-sizing: border-box;
+    }
+
+    .popup button {
+        background: var(--vivid-orange);
+    }
+
+    .popup button:hover {
+        background: #e5530d;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 999;
+    }
+
+    .loading {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--primary);
+        border-top: 4px solid var(--secondary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .scrolling-text-container {
+        margin-top: 15px;
+        width: 100%;
+        overflow: hidden;
+        background: rgba(255, 94, 14, 0.1);
+        padding: 8px 0;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        box-sizing: border-box;
+    }
+
+    .scrolling-text {
+        display: inline-block;
+        white-space: nowrap;
+        animation: scroll 20s linear infinite;
+        color: var(--vivid-orange);
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    @keyframes scroll {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+
+        .container {
+            padding: 15px;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+        }
+
+        h3 {
+            font-size: 1rem;
+        }
+
+        .theme-toggle {
+            top: 10px;
+            right: 10px;
+            padding: 6px;
+            font-size: 1rem;
+        }
+
+        input[type="text"] {
+            max-width: 90%;
+            font-size: 0.9rem;
+            padding: 8px;
+        }
+
+        button {
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            min-width: 100px;
+        }
+
+        .package-button {
+            font-size: 0.85rem;
+            padding: 10px;
+            max-width: 90%;
+        }
+
+        .price-highlight {
+            font-size: 1.1em; /* Slightly smaller on mobile for balance */
+        }
+
+        .bill-section {
+            padding: 15px;
+        }
+
+        #qrCode {
+            margin-top: 10px;
+        }
+
+        .popup {
+            padding: 15px;
+            width: 85%;
+        }
+
+        .scrolling-text {
+            font-size: 0.8rem;
+        }
+    }
+</style>
